@@ -75,9 +75,9 @@ def print_configuration(flags, ssd_params, data_sources, save_dir=None):
         print('\n# =========================================================================== #', file=stream)
         print('# Training | Evaluation dataset files:', file=stream)
         print('# =========================================================================== #', file=stream)
-        #data_files = parallel_reader.get_data_files(data_sources)
-        #pprint(sorted(data_files), stream=stream)
-        #print('', file=stream)
+        data_files = parallel_reader.get_data_files(data_sources)
+        pprint(sorted(data_files), stream=stream)
+        print('', file=stream)
 
     print_config(None)
     # Save to a text file as well.

@@ -118,9 +118,10 @@ def _process_image(directory, name):
         bbox = obj.find('bndbox')
         bboxes.append((float(bbox.find('ymin').text) / shape[0],
                        float(bbox.find('xmin').text) / shape[1],
-                       float(bbox.find('ymax').text) / shape[0],
-                       float(bbox.find('xmax').text) / shape[1]
+                       (float(bbox.find('ymax').text)-1) / shape[0],
+                       (float(bbox.find('xmax').text)-1) / shape[1]
                        ))
+        print(bboxes[-1])
     
     
     return image_data, shape, bboxes, labels, labels_text, difficult, truncated

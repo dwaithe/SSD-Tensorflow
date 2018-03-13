@@ -54,9 +54,10 @@ import numpy as np
 import tensorflow as tf
 
 import xml.etree.ElementTree as ET
+import pylab as plt
+from datasets.dataset_utils import int64_feature, float_feature, bytes_feature, write_label_file
+from datasets.celldatabase_common import CELL_LABELS
 
-from datasets.dataset_utils import int64_feature, float_feature, bytes_feature
-from datasets.pascalvoc_common import VOC_LABELS
 
 # Original dataset organisation.
 DIRECTORY_ANNOTATIONS = 'Annotations/'
@@ -65,6 +66,7 @@ DIRECTORY_IMAGES = 'JPEGImages/'
 # TFRecords convertion parameters.
 RANDOM_SEED = 4242
 SAMPLES_PER_FILES = 200
+_CLASS_NAMES = []
 
 
 def _process_image(directory, name):
@@ -80,7 +82,8 @@ def _process_image(directory, name):
     """
     # Read the image file.
     filename = directory + DIRECTORY_IMAGES + name + '.jpg'
-    image_data = tf.gfile.FastGFile(filename, 'r').read()
+
+    image_data = plt.imread(filename).tostring()
 
     # Read the XML annotation file.
     filename = os.path.join(directory, DIRECTORY_ANNOTATIONS, name + '.xml')
@@ -100,7 +103,7 @@ def _process_image(directory, name):
     truncated = []
     for obj in root.findall('object'):
         label = obj.find('name').text
-        labels.append(int(VOC_LABELS[label][0]))
+        labels.append(int(CELL_LABELS[label][0]))
         labels_text.append(label.encode('ascii'))
 
         if obj.find('difficult'):
@@ -118,6 +121,8 @@ def _process_image(directory, name):
                        float(bbox.find('ymax').text) / shape[0],
                        float(bbox.find('xmax').text) / shape[1]
                        ))
+    _CLASS_NAMES = labels
+    print('_CLASS_NAMES',labels)
     return image_data, shape, bboxes, labels, labels_text, difficult, truncated
 
 
@@ -207,11 +212,17 @@ def run(dataset_dir, output_dir, name='voc_train', shuffling=False):
     while i < len(filenames):
         # Open new TFRecord file.
         tf_filename = _get_output_filename(output_dir, name, fidx)
+        print('filenames',filenames)
         with tf.python_io.TFRecordWriter(tf_filename) as tfrecord_writer:
             j = 0
             while i < len(filenames) and j < SAMPLES_PER_FILES:
                 sys.stdout.write('\r>> Converting image %d/%d' % (i+1, len(filenames)))
                 sys.stdout.flush()
+                print(filenames[i])
+                if filenames[i] == '.DS_Store':
+                    i += 1
+                    j += 1
+                    continue 
 
                 filename = filenames[i]
                 img_name = filename[:-4]
@@ -221,6 +232,7 @@ def run(dataset_dir, output_dir, name='voc_train', shuffling=False):
             fidx += 1
 
     # Finally, write the labels file:
-    # labels_to_class_names = dict(zip(range(len(_CLASS_NAMES)), _CLASS_NAMES))
-    # dataset_utils.write_label_file(labels_to_class_names, dataset_dir)
+    labels_to_class_names = dict(zip(range(len(CELL_LABELS)), CELL_LABELS))
+    print('dataset_dir',output_dir)
+    write_label_file(labels_to_class_names, output_dir)
     print('\nFinished converting the Pascal VOC dataset!')

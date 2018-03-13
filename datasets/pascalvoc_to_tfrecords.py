@@ -116,10 +116,10 @@ def _process_image(directory, name):
             truncated.append(0)
 
         bbox = obj.find('bndbox')
-        bboxes.append((float(bbox.find('ymin').text) / (shape[0]+1),
-                       float(bbox.find('xmin').text) / (shape[1]+1),
-                       float(bbox.find('ymax').text) / (shape[0]+1),
-                       float(bbox.find('xmax').text) / (shape[1]+1)
+        bboxes.append((float(bbox.find('ymin').text) / shape[0],
+                       float(bbox.find('xmin').text) / shape[1],
+                       float(bbox.find('ymax').text) / shape[0],
+                       float(bbox.find('xmax').text) / shape[1]
                        ))
     
     

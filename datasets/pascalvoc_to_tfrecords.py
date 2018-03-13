@@ -66,7 +66,7 @@ DIRECTORY_IMAGES = 'JPEGImages/'
 # TFRecords convertion parameters.
 RANDOM_SEED = 4242
 SAMPLES_PER_FILES = 200
-_CLASS_NAMES = []
+
 
 
 def _process_image(directory, name):
@@ -116,13 +116,13 @@ def _process_image(directory, name):
             truncated.append(0)
 
         bbox = obj.find('bndbox')
-        bboxes.append((float(bbox.find('ymin').text)-1 / shape[0],
-                       float(bbox.find('xmin').text)-1 / shape[1],
-                       float(bbox.find('ymax').text)-1 / shape[0],
-                       float(bbox.find('xmax').text)-1 / shape[1]
+        bboxes.append((float(bbox.find('ymin').text) / shape[0],
+                       float(bbox.find('xmin').text) / shape[1],
+                       float(bbox.find('ymax').text) / shape[0],
+                       float(bbox.find('xmax').text) / shape[1]
                        ))
-    _CLASS_NAMES = labels
-    print('_CLASS_NAMES',labels)
+    
+    
     return image_data, shape, bboxes, labels, labels_text, difficult, truncated
 
 

@@ -289,12 +289,13 @@ def preprocess_for_train(image, labels, bboxes,
         tf_summary_image(dst_image, bboxes, 'image_color_distorted')
 
         # Rescale to VGG input scale.
-        
+
         image = dst_image * 255.
         image = tf_image_whitened(image, [_R_MEAN, _G_MEAN, _B_MEAN])
         # Image data format.
         if data_format == 'NCHW':
             image = tf.transpose(image, perm=(2, 0, 1))
+        print(image.shape)
         return image, labels, bboxes
 
 

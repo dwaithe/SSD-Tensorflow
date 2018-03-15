@@ -23,13 +23,10 @@ slim = tf.contrib.slim
 
 CELL_LABELS = {
     'none': (0, 'Background'),
-    'cell - peroxisome gfp-scp all': (1, 'Cell'),
-    'cell - peroxisome gfp-scp': (2, 'Cell'),
-    'cell - GM5756T nucleopore': (3, 'Cell'),
-    'cell - c127_dapi': (4, 'Cell'),
-    'cell - Isabel': (5, 'Cell'),
-    'cell - neuroblastoma phalloidin': (6, 'Cell'),
-    'cell - neuroblastoma phalloidin dapi': (7, 'Cell'),
+    'cell - GM5756T nucleopore': (1, 'Cell'),
+    
+    
+    
     
 }
 

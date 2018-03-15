@@ -29,12 +29,24 @@ ITEMS_TO_DESCRIPTIONS = {
 # (Images, Objects) statistics on every class.
 TRAIN_STATISTICS = {
     'none': (0, 0),
+    'cell - peroxisome gfp-scp all':(0,0),
+    'cell - peroxisome gfp-scp': (0,0),
     'cell - GM5756T nucleopore': (50,400),
+    'cell - c127_dapi': (0,0),
+    'cell - Isabel': (0,0),
+    'cell - neuroblastoma phalloidin': (0,0),
+    'cell - neuroblastoma phalloidin dapi': (0,0),
     'total': (50, 400),
 }
 TEST_STATISTICS = {
     'none': (0, 0),
-    'cell - GM5756T nucleopore': (1, 1),
+    'cell - peroxisome gfp-scp all':(0,0),
+    'cell - peroxisome gfp-scp': (0,0),
+    'cell - GM5756T nucleopore': (1,1),
+    'cell - c127_dapi': (0,0),
+    'cell - Isabel': (0,0),
+    'cell - neuroblastoma phalloidin': (0,0),
+    'cell - neuroblastoma phalloidin dapi': (0,0),
     'total': (1, 1),
 }
 SPLITS_TO_SIZES = {
@@ -45,7 +57,7 @@ SPLITS_TO_STATISTICS = {
     'train': TRAIN_STATISTICS,
     'test': TEST_STATISTICS,
 }
-NUM_CLASSES = 1
+NUM_CLASSES = 7
 
 
 def get_split(split_name, dataset_dir, file_pattern=None, reader=None):

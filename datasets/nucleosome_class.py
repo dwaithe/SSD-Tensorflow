@@ -29,25 +29,25 @@ ITEMS_TO_DESCRIPTIONS = {
 # (Images, Objects) statistics on every class.
 TRAIN_STATISTICS = {
     'none': (0, 0),
-    'cell - peroxisome gfp-scp all':(0,0),
-    'cell - peroxisome gfp-scp': (0,0),
+    'cell - peroxisome gfp-scp all': (50,400),
+    'cell - peroxisome gfp-scp':  (50,400),
     'cell - GM5756T nucleopore': (50,400),
-    'cell - c127_dapi': (0,0),
-    'cell - Isabel': (0,0),
-    'cell - neuroblastoma phalloidin': (0,0),
-    'cell - neuroblastoma phalloidin dapi': (0,0),
+    'cell - c127_dapi':  (50,400),
+    'cell - Isabel':  (50,400),
+    'cell - neuroblastoma phalloidin':  (50,400),
+    'cell - neuroblastoma phalloidin dapi':  (50,400),
     'total': (50, 400),
 }
 TEST_STATISTICS = {
     'none': (0, 0),
-    'cell - peroxisome gfp-scp all':(0,0),
-    'cell - peroxisome gfp-scp': (0,0),
+    'cell - peroxisome gfp-scp all':(1,1),
+    'cell - peroxisome gfp-scp': (1,1),
     'cell - GM5756T nucleopore': (1,1),
-    'cell - c127_dapi': (0,0),
-    'cell - Isabel': (0,0),
-    'cell - neuroblastoma phalloidin': (0,0),
-    'cell - neuroblastoma phalloidin dapi': (0,0),
-    'total': (1, 1),
+    'cell - c127_dapi': (1,1),
+    'cell - Isabel': (1,1),
+    'cell - neuroblastoma phalloidin': (1,1),
+    'cell - neuroblastoma phalloidin dapi': (1,1),
+    'total': (6, 6),
 }
 SPLITS_TO_SIZES = {
     'train': 25,

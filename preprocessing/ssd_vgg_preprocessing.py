@@ -295,7 +295,7 @@ def preprocess_for_train(image, labels, bboxes,
         # Image data format.
         if data_format == 'NCHW':
             image = tf.transpose(image, perm=(2, 0, 1))
-        print(image.shape)
+        print('image',image.shape)
         return image, labels, bboxes
 
 

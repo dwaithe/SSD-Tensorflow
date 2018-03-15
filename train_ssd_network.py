@@ -23,7 +23,7 @@ from preprocessing import preprocessing_factory
 import tf_utils
 import os
 
-os.environ["CUDA_VISIBLE_DEVICES"] = '0'
+os.environ["CUDA_VISIBLE_DEVICES"] = ''
 
 slim = tf.contrib.slim
 

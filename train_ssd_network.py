@@ -233,6 +233,8 @@ def main(_):
                     shuffle=True)
             # Get for SSD network: image, labels, bboxes.
             [image, glabels, gbboxes] = provider.get(['image', 'object/label', 'object/bbox'])
+
+            print('check',image.shape)
             # Pre-processing image, labels and bboxes.
             image, glabels, gbboxes = \
                 image_preprocessing_fn(image, glabels, gbboxes,
@@ -371,6 +373,7 @@ def main(_):
                                keep_checkpoint_every_n_hours=1.0,
                                write_version=2,
                                pad_step_number=False)
+        
         slim.learning.train(
             train_tensor,
             logdir=FLAGS.train_dir,

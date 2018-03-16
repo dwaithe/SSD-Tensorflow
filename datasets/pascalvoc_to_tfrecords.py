@@ -84,7 +84,7 @@ def _process_image(directory, name):
     filename = directory + DIRECTORY_IMAGES + name + '.jpg'
 
     temp = iot.imread(filename)
-    imout = np.zeros((532,532,3))
+    imout = np.zeros((temp.shape[0],temp.shape[1],3))
 
     imout[:,:,0]= temp
     imout[:,:,1]= temp

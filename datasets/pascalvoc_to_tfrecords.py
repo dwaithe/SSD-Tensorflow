@@ -94,7 +94,7 @@ def _process_image(directory, name):
     size = root.find('size')
     shape = [int(size.find('height').text),
              int(size.find('width').text),
-             int(size.find('depth').text)]
+             int(2)]
     # Find annotations.
     bboxes = []
     labels = []

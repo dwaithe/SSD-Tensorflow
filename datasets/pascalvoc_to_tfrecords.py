@@ -49,15 +49,15 @@ for each example.
 import os
 import sys
 import random
-
+import io
 import numpy as np
 import tensorflow as tf
-
+import skimage.io as iot
 import xml.etree.ElementTree as ET
 import pylab as plt
 from datasets.dataset_utils import int64_feature, float_feature, bytes_feature, write_label_file
 from datasets.celldatabase_common import CELL_LABELS
-
+from PIL import Image
 
 # Original dataset organisation.
 DIRECTORY_ANNOTATIONS = 'Annotations/'
@@ -83,7 +83,17 @@ def _process_image(directory, name):
     # Read the image file.
     filename = directory + DIRECTORY_IMAGES + name + '.jpg'
 
-    image_data = tf.gfile.FastGFile(filename, 'rb').read()
+    temp = iot.imread(filename)
+    imout = np.zeros((532,532,3))
+
+    imout[:,:,0]= temp
+    imout[:,:,1]= temp
+    imout[:,:,2]= temp
+    iot.imsave('temp.jpg',imout.astype(np.uint8))
+
+    image_data = tf.gfile.FastGFile('temp.jpg', 'rb').read()
+
+    print('shapeadjuest',np.array(Image.open(io.BytesIO(image_data))).shape)
 
     # Read the XML annotation file.
     filename = os.path.join(directory, DIRECTORY_ANNOTATIONS, name + '.xml')
@@ -94,7 +104,7 @@ def _process_image(directory, name):
     size = root.find('size')
     shape = [int(size.find('height').text),
              int(size.find('width').text),
-             int(2)]
+             int(size.find('depth').text)]
     # Find annotations.
     bboxes = []
     labels = []

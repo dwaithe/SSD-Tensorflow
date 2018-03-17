@@ -15,7 +15,7 @@
 """Provides data for the Pascal VOC Dataset (images + annotations).
 """
 import tensorflow as tf
-from datasets import pascalvoc_common
+from datasets import celldatabase_common
 
 slim = tf.contrib.slim
 

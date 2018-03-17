@@ -22,6 +22,79 @@ from nets import nets_factory
 from preprocessing import preprocessing_factory
 import tf_utils
 import os
+import os
+import pylab as plt
+import tensorflow as tf
+slim = tf.contrib.slim
+def get_split(split_name, dataset_dir, file_pattern, reader,
+              split_to_sizes, items_to_descriptions, num_classes):
+    """Gets a dataset tuple with instructions for reading Pascal VOC dataset.
+
+    Args:
+      split_name: A train/test split name.
+      dataset_dir: The base directory of the dataset sources.
+      file_pattern: The file pattern to use when matching the dataset sources.
+        It is assumed that the pattern contains a '%s' string so that the split
+        name can be inserted.
+      reader: The TensorFlow reader type.
+
+    Returns:
+      A `Dataset` namedtuple.
+
+    Raises:
+        ValueError: if `split_name` is not a valid train/test split.
+    """
+    if split_name not in split_to_sizes:
+        raise ValueError('split name %s was not recognized.' % split_name)
+    file_pattern = os.path.join(dataset_dir, file_pattern)
+
+    # Allowing None in the signature so that dataset_factory can use the default.
+    if reader is None:
+        reader = tf.TFRecordReader
+    # Features in Pascal VOC TFRecords.
+    keys_to_features = {
+        'image/encoded': tf.FixedLenFeature((), tf.string, default_value=''),
+        'image/format': tf.FixedLenFeature((), tf.string, default_value='jpeg'),
+        'image/height': tf.FixedLenFeature([1], tf.int64),
+        'image/width': tf.FixedLenFeature([1], tf.int64),
+        'image/channels': tf.FixedLenFeature([1], tf.int64),
+        'image/shape': tf.FixedLenFeature([3], tf.int64),
+        'image/object/bbox/xmin': tf.VarLenFeature(dtype=tf.float32),
+        'image/object/bbox/ymin': tf.VarLenFeature(dtype=tf.float32),
+        'image/object/bbox/xmax': tf.VarLenFeature(dtype=tf.float32),
+        'image/object/bbox/ymax': tf.VarLenFeature(dtype=tf.float32),
+        'image/object/bbox/label': tf.VarLenFeature(dtype=tf.int64),
+        'image/object/bbox/difficult': tf.VarLenFeature(dtype=tf.int64),
+        'image/object/bbox/truncated': tf.VarLenFeature(dtype=tf.int64),
+    }
+    items_to_handlers = {
+        'image': slim.tfexample_decoder.Image('image/encoded', 'image/format'),
+        'shape': slim.tfexample_decoder.Tensor('image/shape'),
+        'object/bbox': slim.tfexample_decoder.BoundingBox(
+                ['ymin', 'xmin', 'ymax', 'xmax'], 'image/object/bbox/'),
+        'object/label': slim.tfexample_decoder.Tensor('image/object/bbox/label'),
+        'object/difficult': slim.tfexample_decoder.Tensor('image/object/bbox/difficult'),
+        'object/truncated': slim.tfexample_decoder.Tensor('image/object/bbox/truncated'),
+    }
+    decoder = slim.tfexample_decoder.TFExampleDecoder(
+        keys_to_features, items_to_handlers)
+
+    labels_to_names = None
+    #if dataset_utils.has_labels(dataset_dir):
+        #labels_to_names = dataset_utils.read_label_file(dataset_dir)
+    labels_to_names = tf.gfile.Exists(os.path.join(dataset_dir, "labels.txt"))
+    # else:
+    #     labels_to_names = create_readable_names_for_imagenet_labels()
+    #     dataset_utils.write_label_file(labels_to_names, dataset_dir)
+
+    return slim.dataset.Dataset(
+            data_sources=file_pattern,
+            reader=reader,
+            decoder=decoder,
+            num_samples=split_to_sizes[split_name],
+            items_to_descriptions=items_to_descriptions,
+            num_classes=num_classes,
+            labels_to_names=labels_to_names)
 
 os.environ["CUDA_VISIBLE_DEVICES"] = ''
 
@@ -233,7 +306,7 @@ def main(_):
                     shuffle=True)
             # Get for SSD network: image, labels, bboxes.
             [image, glabels, gbboxes] = provider.get(['image', 'object/label', 'object/bbox'])
-
+            
             print('check',image.shape)
             # Pre-processing image, labels and bboxes.
             image, glabels, gbboxes = \
@@ -244,6 +317,7 @@ def main(_):
             gclasses, glocalisations, gscores = \
                 ssd_net.bboxes_encode(glabels, gbboxes, ssd_anchors)
             batch_shape = [1] + [len(ssd_anchors)] * 3
+            print('do we get here')
 
             # Training batches and queue.
             r = tf.train.batch(
@@ -251,14 +325,54 @@ def main(_):
                 batch_size=FLAGS.batch_size,
                 num_threads=FLAGS.num_preprocessing_threads,
                 capacity=5 * FLAGS.batch_size)
+
+            def check_strip():
+                print("check files")
+                sess = tf.InteractiveSession()
+                sess.run(tf.global_variables_initializer())
+                print("check files2")
+                dataset_dir = '/Users/dwaithe/Documents/collaborators/WaitheD/SSD-Tensorflow/tmp/'  # address to save the hdf5 file
+                file_pattern = "train-nucleosome_000.tfrecord"
+                dataset = get_split('train', dataset_dir, file_pattern,None,{'train':2,'test':2},
+                               None, 2)
+
+                provider = slim.dataset_data_provider.DatasetDataProvider(dataset)
+                keys = provider._items_to_tensors.keys()
+                print(provider._num_samples)
+                tf.train.start_queue_runners()
+                c=0
+                print(0)
+                for item in range(0,provider._num_samples):
+                    print(c)
+                    c +=1
+                    
+
+                    [image, label] = provider.get(['image', 'object/label'])
+                    bbox = provider.get(['object/bbox'])
+                    
+                    print(sess.run(image).shape)
+                    print(sess.run(bbox))
+                    
+            
+            
+
+
             b_image, b_gclasses, b_glocalisations, b_gscores = \
                 tf_utils.reshape_list(r, batch_shape)
-
-            # Intermediate queueing: unique batch computation pipeline for all
+            print('do we get here')
+                        # Intermediate queueing: unique batch computation pipeline for all
             # GPUs running the training.
             batch_queue = slim.prefetch_queue.prefetch_queue(
                 tf_utils.reshape_list([b_image, b_gclasses, b_glocalisations, b_gscores]),
                 capacity=2 * deploy_config.num_clones)
+            
+
+
+        
+
+
+
+
 
         # =================================================================== #
         # Define the model running on every GPU.
@@ -373,21 +487,40 @@ def main(_):
                                keep_checkpoint_every_n_hours=1.0,
                                write_version=2,
                                pad_step_number=False)
+        print('do we get here')
+
+        check_strip()
         
-        slim.learning.train(
-            train_tensor,
-            logdir=FLAGS.train_dir,
-            master='',
-            is_chief=True,
-            init_fn=tf_utils.get_init_fn(FLAGS),
-            summary_op=summary_op,
-            number_of_steps=FLAGS.max_number_of_steps,
-            log_every_n_steps=FLAGS.log_every_n_steps,
-            save_summaries_secs=FLAGS.save_summaries_secs,
-            saver=saver,
-            save_interval_secs=FLAGS.save_interval_secs,
-            session_config=config,
-            sync_optimizer=None)
+
+
+
+        
+
+
+
+
+
+
+
+        print(FLAGS.train_dir)
+        print( train_tensor)
+
+        #slim.learning.train(train_tensor)
+
+        """ slim.learning.train(
+                                 train_tensor,
+                                 logdir=FLAGS.train_dir,
+                                 master='',
+                                 is_chief=True,
+                                 init_fn=tf_utils.get_init_fn(FLAGS),
+                                 summary_op=summary_op,
+                                 number_of_steps=FLAGS.max_number_of_steps,
+                                 log_every_n_steps=FLAGS.log_every_n_steps,
+                                 save_summaries_secs=FLAGS.save_summaries_secs,
+                                 saver=saver,
+                                 save_interval_secs=FLAGS.save_interval_secs,
+                                 session_config=config,
+                                 sync_optimizer=None)"""
 
 
 if __name__ == '__main__':

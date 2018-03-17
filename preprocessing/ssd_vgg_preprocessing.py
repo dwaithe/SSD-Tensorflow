@@ -251,7 +251,10 @@ def preprocess_for_train(image, labels, bboxes,
 
     Returns:
         A preprocessed image.
+
     """
+    import pylab as plt
+    print("Ist this happening")
     fast_mode = False
     with tf.name_scope(scope, 'ssd_preprocessing_train', [image, labels, bboxes]):
         if image.get_shape().ndims != 3:
@@ -296,6 +299,7 @@ def preprocess_for_train(image, labels, bboxes,
         if data_format == 'NCHW':
             image = tf.transpose(image, perm=(2, 0, 1))
         print('image',image.shape)
+        
         return image, labels, bboxes
 
 

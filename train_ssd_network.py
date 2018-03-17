@@ -489,7 +489,7 @@ def main(_):
                                pad_step_number=False)
         print('do we get here')
 
-        check_strip()
+        #check_strip()
         
 
 

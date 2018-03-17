@@ -507,7 +507,7 @@ def main(_):
 
         #slim.learning.train(train_tensor)
 
-        """ slim.learning.train(
+        slim.learning.train(
                                  train_tensor,
                                  logdir=FLAGS.train_dir,
                                  master='',
@@ -520,7 +520,7 @@ def main(_):
                                  saver=saver,
                                  save_interval_secs=FLAGS.save_interval_secs,
                                  session_config=config,
-                                 sync_optimizer=None)"""
+                                 sync_optimizer=None)
 
 
 if __name__ == '__main__':

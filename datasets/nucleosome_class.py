@@ -35,7 +35,7 @@ TRAIN_STATISTICS = {
 TEST_STATISTICS = {
     'none': (0, 0),
     'cell - GM5756T nucleopore': (1,1),
-    'total': (6, 6),
+    'total': (1, 1),
 }
 SPLITS_TO_SIZES = {
     'train': 25,
@@ -67,7 +67,7 @@ def get_split(split_name, dataset_dir, file_pattern=None, reader=None):
     """
     if not file_pattern:
         file_pattern = FILE_PATTERN
-    return pascalvoc_common.get_split(split_name, dataset_dir,
+    return celldatabase_common.get_split(split_name, dataset_dir,
                                       file_pattern, reader,
                                       SPLITS_TO_SIZES,
                                       ITEMS_TO_DESCRIPTIONS,

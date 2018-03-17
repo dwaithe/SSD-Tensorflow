@@ -253,8 +253,8 @@ def preprocess_for_train(image, labels, bboxes,
         A preprocessed image.
 
     """
-    import pylab as plt
-    print("Ist this happening")
+    
+
     fast_mode = False
     with tf.name_scope(scope, 'ssd_preprocessing_train', [image, labels, bboxes]):
         if image.get_shape().ndims != 3:
@@ -271,10 +271,18 @@ def preprocess_for_train(image, labels, bboxes,
 
         # Distort image and bounding boxes.
         dst_image = image
-        #dst_image, labels, bboxes, distort_bbox = \
-        #    distorted_bounding_box_crop(image, labels, bboxes,
-         #                               min_object_covered=MIN_OBJECT_COVERED,
-          #                              aspect_ratio_range=CROP_RATIO_RANGE)
+       
+        sess = tf.InteractiveSession()
+        tf.train.start_queue_runners()
+       
+        
+        dst_image, labels, bboxes, distort_bbox = \
+            distorted_bounding_box_crop(image, labels, bboxes,
+                                        min_object_covered=MIN_OBJECT_COVERED,
+                                        aspect_ratio_range=CROP_RATIO_RANGE)
+        sess = tf.InteractiveSession()
+        tf.train.start_queue_runners()
+       
         # Resize image to output size.
         dst_image = tf_image.resize_image(dst_image, out_shape,
                                           method=tf.image.ResizeMethod.BILINEAR,
@@ -298,7 +306,7 @@ def preprocess_for_train(image, labels, bboxes,
         # Image data format.
         if data_format == 'NCHW':
             image = tf.transpose(image, perm=(2, 0, 1))
-        print('image',image.shape)
+        
         
         return image, labels, bboxes
 

@@ -206,7 +206,7 @@ tf.app.flags.DEFINE_float(
 # Dataset Flags.
 # =========================================================================== #
 tf.app.flags.DEFINE_string(
-    'dataset_name', 'imagenet', 'The name of the dataset to load.')
+    'dataset_name', 'nucleosome_class', 'The name of the dataset to load.')
 tf.app.flags.DEFINE_integer(
     'num_classes', 2, 'Number of classes to use in the dataset.')
 tf.app.flags.DEFINE_string(
@@ -276,6 +276,7 @@ def main(_):
             global_step = slim.create_global_step()
 
         # Select the dataset.
+        
         dataset = dataset_factory.get_dataset(
             FLAGS.dataset_name, FLAGS.dataset_split_name, FLAGS.dataset_dir)
 
@@ -306,8 +307,9 @@ def main(_):
                     shuffle=True)
             # Get for SSD network: image, labels, bboxes.
             [image, glabels, gbboxes] = provider.get(['image', 'object/label', 'object/bbox'])
+            sess = tf.InteractiveSession()
+            tf.train.start_queue_runners()
             
-            print('check',image.shape)
             # Pre-processing image, labels and bboxes.
             image, glabels, gbboxes = \
                 image_preprocessing_fn(image, glabels, gbboxes,
@@ -317,7 +319,7 @@ def main(_):
             gclasses, glocalisations, gscores = \
                 ssd_net.bboxes_encode(glabels, gbboxes, ssd_anchors)
             batch_shape = [1] + [len(ssd_anchors)] * 3
-            print('do we get here')
+            
 
             # Training batches and queue.
             r = tf.train.batch(
@@ -326,53 +328,15 @@ def main(_):
                 num_threads=FLAGS.num_preprocessing_threads,
                 capacity=5 * FLAGS.batch_size)
 
-            def check_strip():
-                print("check files")
-                sess = tf.InteractiveSession()
-                sess.run(tf.global_variables_initializer())
-                print("check files2")
-                dataset_dir = '/Users/dwaithe/Documents/collaborators/WaitheD/SSD-Tensorflow/tmp/'  # address to save the hdf5 file
-                file_pattern = "train-nucleosome_000.tfrecord"
-                dataset = get_split('train', dataset_dir, file_pattern,None,{'train':2,'test':2},
-                               None, 2)
-
-                provider = slim.dataset_data_provider.DatasetDataProvider(dataset)
-                keys = provider._items_to_tensors.keys()
-                print(provider._num_samples)
-                tf.train.start_queue_runners()
-                c=0
-                print(0)
-                for item in range(0,provider._num_samples):
-                    print(c)
-                    c +=1
-                    
-
-                    [image, label] = provider.get(['image', 'object/label'])
-                    bbox = provider.get(['object/bbox'])
-                    
-                    print(sess.run(image).shape)
-                    print(sess.run(bbox))
-                    
-            
-            
-
 
             b_image, b_gclasses, b_glocalisations, b_gscores = \
                 tf_utils.reshape_list(r, batch_shape)
-            print('do we get here')
+            
                         # Intermediate queueing: unique batch computation pipeline for all
             # GPUs running the training.
             batch_queue = slim.prefetch_queue.prefetch_queue(
                 tf_utils.reshape_list([b_image, b_gclasses, b_glocalisations, b_gscores]),
                 capacity=2 * deploy_config.num_clones)
-            
-
-
-        
-
-
-
-
 
         # =================================================================== #
         # Define the model running on every GPU.
@@ -487,25 +451,9 @@ def main(_):
                                keep_checkpoint_every_n_hours=1.0,
                                write_version=2,
                                pad_step_number=False)
-        print('do we get here')
-
-        #check_strip()
         
 
-
-
-        
-
-
-
-
-
-
-
-        print(FLAGS.train_dir)
-        print( train_tensor)
-
-        #slim.learning.train(train_tensor)
+    
 
         slim.learning.train(
                                  train_tensor,

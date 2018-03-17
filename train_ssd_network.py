@@ -96,7 +96,7 @@ def get_split(split_name, dataset_dir, file_pattern, reader,
             num_classes=num_classes,
             labels_to_names=labels_to_names)
 
-os.environ["CUDA_VISIBLE_DEVICES"] = ''
+os.environ["CUDA_VISIBLE_DEVICES"] = '0'
 
 slim = tf.contrib.slim
 

@@ -310,6 +310,11 @@ def main(_):
 
             # Standard evaluation loop.
             start = time.time()
+            print('Fm',FLAGS.master)
+            print('ckpp',checkpoint_path)
+            print('evaldir',FLAGS.eval_dir)
+            print('nb',num_batches)
+            print('natoup',list(names_to_updates.values()))
             slim.evaluation.evaluate_once(
                 master=FLAGS.master,
                 checkpoint_path=checkpoint_path,

@@ -262,7 +262,7 @@ def main(_):
         raise ValueError('You must supply the dataset directory with --dataset_dir')
 
 
-    print("class name",FLAGS.dataset_dir)
+    print("class name",FLAGS.dataset_name)
     tf.logging.set_verbosity(tf.logging.DEBUG)
     with tf.Graph().as_default():
         # Config model_deploy. Keep TF Slim Models structure.

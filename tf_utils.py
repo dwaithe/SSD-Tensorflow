@@ -194,11 +194,11 @@ def get_init_fn(flags):
     if flags.checkpoint_path is None:
         return None
     # Warn the user if a checkpoint exists in the train_dir. Then ignore.
-    if tf.train.latest_checkpoint(flags.train_dir):
-        tf.logging.info(
-            'Ignoring --checkpoint_path because a checkpoint already exists in %s'
-            % flags.train_dir)
-        return None
+    #if tf.train.latest_checkpoint(flags.train_dir):
+    #    tf.logging.info(
+    #        'Ignoring --checkpoint_path because a checkpoint already exists in %s'
+    #        % flags.train_dir)
+    #    return None
 
     exclusions = []
     if flags.checkpoint_exclude_scopes:

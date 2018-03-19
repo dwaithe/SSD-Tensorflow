@@ -206,7 +206,7 @@ tf.app.flags.DEFINE_float(
 # Dataset Flags.
 # =========================================================================== #
 tf.app.flags.DEFINE_string(
-    'dataset_name', 'nucleosome_class', 'The name of the dataset to load.')
+    'dataset_name', 'imagenet', 'The name of the dataset to load.')
 tf.app.flags.DEFINE_integer(
     'num_classes', 2, 'Number of classes to use in the dataset.')
 tf.app.flags.DEFINE_string(

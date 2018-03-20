@@ -29,8 +29,8 @@ ITEMS_TO_DESCRIPTIONS = {
 # (Images, Objects) statistics on every class.
 TRAIN_STATISTICS = {
     'none': (0, 0),
-    'cell - GM5756T nucleopore': (50,400),
-    'total': (50, 400),
+    'cell - GM5756T nucleopore': (25,200),
+    'total': (25, 200),
 }
 TEST_STATISTICS = {
     'none': (0, 0),

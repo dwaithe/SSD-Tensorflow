@@ -272,16 +272,14 @@ def preprocess_for_train(image, labels, bboxes,
         # Distort image and bounding boxes.
         dst_image = image
        
-        sess = tf.InteractiveSession()
-        tf.train.start_queue_runners()
+        
        
         
         dst_image, labels, bboxes, distort_bbox = \
             distorted_bounding_box_crop(image, labels, bboxes,
                                         min_object_covered=MIN_OBJECT_COVERED,
                                         aspect_ratio_range=CROP_RATIO_RANGE)
-        sess = tf.InteractiveSession()
-        tf.train.start_queue_runners()
+        
        
         # Resize image to output size.
         dst_image = tf_image.resize_image(dst_image, out_shape,
@@ -302,6 +300,7 @@ def preprocess_for_train(image, labels, bboxes,
         # Rescale to VGG input scale.
 
         image = dst_image * 255.
+        
         image = tf_image_whitened(image, [_R_MEAN, _G_MEAN, _B_MEAN])
         # Image data format.
         if data_format == 'NCHW':

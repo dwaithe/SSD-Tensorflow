@@ -84,14 +84,18 @@ def _process_image(directory, name):
     filename = directory + DIRECTORY_IMAGES + name + '.jpg'
 
     temp = iot.imread(filename)
-    imout = np.zeros((temp.shape[0],temp.shape[1],3))
+    if temp.shape.__len__() <3:
+        imout = np.zeros((temp.shape[0],temp.shape[1],3))
 
-    imout[:,:,0]= temp
-    imout[:,:,1]= temp
-    imout[:,:,2]= temp
-    iot.imsave('temp.jpg',imout.astype(np.uint8))
+        imout[:,:,0]= temp
+        imout[:,:,1]= temp
+        imout[:,:,2]= temp
+        iot.imsave('temp.jpg',imout.astype(np.uint8))
+        image_data = tf.gfile.FastGFile('temp.jpg', 'rb').read()
+    else:
+        image_data = tf.gfile.FastGFile(filename, 'rb').read()
 
-    image_data = tf.gfile.FastGFile('temp.jpg', 'rb').read()
+    
 
     print('shapeadjuest',np.array(Image.open(io.BytesIO(image_data))).shape)
 
@@ -243,7 +247,7 @@ def run(dataset_dir, output_dir, name='voc_train', shuffling=False):
             fidx += 1
 
     # Finally, write the labels file:
-    labels_to_class_names = dict(zip(range(len(CELL_LABELS)), CELL_LABELS))
-    print('dataset_dir',output_dir)
-    write_label_file(labels_to_class_names, output_dir)
+    #labels_to_class_names = dict(zip(range(len(CELL_LABELS)), CELL_LABELS))
+    #print('dataset_dir',output_dir)
+    #write_label_file(labels_to_class_names, output_dir)
     print('\nFinished converting the Pascal VOC dataset!')

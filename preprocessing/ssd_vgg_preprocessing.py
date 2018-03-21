@@ -24,7 +24,7 @@ from tensorflow.python.ops import control_flow_ops
 
 from preprocessing import tf_image
 from nets import ssd_common
-import cPickle as pickle
+import _pickle as pickle
 slim = tf.contrib.slim
 
 # Resizing strategies.

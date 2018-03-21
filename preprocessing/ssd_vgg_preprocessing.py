@@ -299,7 +299,7 @@ def preprocess_for_train(image, labels, bboxes,
 
         # Rescale to VGG input scale.
 
-        image = dst_image #* 255.
+        image = dst_image* 255.
         
         image = tf_image_whitened(image, [_R_MEAN, _G_MEAN, _B_MEAN])
         #tf.train.start_queue_runners()

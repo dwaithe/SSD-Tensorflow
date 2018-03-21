@@ -304,10 +304,10 @@ def preprocess_for_train(image, labels, bboxes,
         image = tf_image_whitened(image, [_R_MEAN, _G_MEAN, _B_MEAN])
         tf.train.start_queue_runners()
 
-        sess = tf.Session()
-        out = sess.run(image)
+        #sess = tf.Session()
+        #out = sess.run(image)
         with open('filename.pickle', 'wb') as handle:
-            pickle.dump(out, handle, protocol=pickle.HIGHEST_PROTOCOL)
+            pickle.dump(image, handle, protocol=pickle.HIGHEST_PROTOCOL)
 
         # Image data format.
         if data_format == 'NCHW':

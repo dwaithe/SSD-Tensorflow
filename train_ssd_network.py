@@ -309,8 +309,7 @@ def main(_):
                     shuffle=True)
             # Get for SSD network: image, labels, bboxes.
             [image, glabels, gbboxes] = provider.get(['image', 'object/label', 'object/bbox'])
-            #sess = tf.InteractiveSession()
-            #tf.train.start_queue_runners()
+            
             
             # Pre-processing image, labels and bboxes.
             image, glabels, gbboxes = \

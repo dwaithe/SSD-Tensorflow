@@ -302,10 +302,10 @@ def preprocess_for_train(image, labels, bboxes,
         image = dst_image #* 255.
         
         image = tf_image_whitened(image, [_R_MEAN, _G_MEAN, _B_MEAN])
-        tf.train.start_queue_runners()
+        #tf.train.start_queue_runners()
 
 
-        
+
 
         #sess = tf.Session()
         #out = sess.run(image)

@@ -303,6 +303,7 @@ def preprocess_for_train(image, labels, bboxes,
         
         image = tf_image_whitened(image, [_R_MEAN, _G_MEAN, _B_MEAN])
         sess = tf.Session()
+        tf.train.start_queue_runners()
         out = sess.run(image)
         with open('filename.pickle', 'wb') as handle:
             pickle.dump(out, handle, protocol=pickle.HIGHEST_PROTOCOL)

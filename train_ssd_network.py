@@ -100,7 +100,7 @@ os.environ["CUDA_VISIBLE_DEVICES"] = '0'
 
 slim = tf.contrib.slim
 
-DATA_FORMAT = 'NCHW'
+DATA_FORMAT = 'NHWC'
 
 # =========================================================================== #
 # SSD Network flags.

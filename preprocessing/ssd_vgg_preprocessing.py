@@ -24,7 +24,7 @@ from tensorflow.python.ops import control_flow_ops
 
 from preprocessing import tf_image
 from nets import ssd_common
-
+import cPickle as pickle
 slim = tf.contrib.slim
 
 # Resizing strategies.
@@ -302,6 +302,11 @@ def preprocess_for_train(image, labels, bboxes,
         image = dst_image * 255.
         
         image = tf_image_whitened(image, [_R_MEAN, _G_MEAN, _B_MEAN])
+        sess = tf.Session()
+        out = sess.run(image)
+        with open('filename.pickle', 'wb') as handle:
+            pickle.dump(out, handle, protocol=pickle.HIGHEST_PROTOCOL)
+
         # Image data format.
         if data_format == 'NCHW':
             image = tf.transpose(image, perm=(2, 0, 1))
